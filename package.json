@@ -1,0 +1,11 @@
+{
+  "name": "placement-portal",
+  "version": "1.0.0",
+  "description": "AI-Powered Placement Assistant",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx -y serve ."
+  },
+  "author": "Sasidhar",
+  "license": "ISC"
+}

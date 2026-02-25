@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>PlaceAI — AI-Powered Placement Assistant</title>
+  <meta name="description"
+    content="AI-Powered Placement Assistant & Job Portal with mock tests, interview practice, and career tools">
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Mobile Menu -->
+  <button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+
+  <!-- Sidebar -->
+  <div class="app-wrapper">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-icon">P</div>
+        <div class="logo-text">PlaceAI<span class="logo-sub">Placement Assistant</span></div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-group">
+          <div class="nav-group-title">Overview</div>
+          <div class="nav-item active" data-page="dashboard"><span class="icon"><i
+                class="fas fa-th-large"></i></span><span class="nav-label">Dashboard</span></div>
+          <div class="nav-item" data-page="profile"><span class="icon"><i class="fas fa-user"></i></span><span
+              class="nav-label">Profile</span></div>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Jobs & Market</div>
+          <div class="nav-item" data-page="jobs"><span class="icon"><i class="fas fa-briefcase"></i></span><span
+              class="nav-label">Job Listings</span><span class="badge">24</span></div>
+          <div class="nav-item" data-page="market"><span class="icon"><i class="fas fa-chart-line"></i></span><span
+              class="nav-label">Market Intelligence</span></div>
+          <div class="nav-item" data-page="jobapis"><span class="icon"><i class="fas fa-plug"></i></span><span
+              class="nav-label">Job Board APIs</span></div>
+          <div class="nav-item" data-page="apicompare"><span class="icon"><i class="fas fa-columns"></i></span><span
+              class="nav-label">API Comparison</span></div>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">AI Interview</div>
+          <div class="nav-item" data-page="interview"><span class="icon"><i class="fas fa-comments"></i></span><span
+              class="nav-label">AI Interview Sim</span></div>
+          <div class="nav-item" data-page="videopractice"><span class="icon"><i class="fas fa-video"></i></span><span
+              class="nav-label">Video Practice</span></div>
+          <div class="nav-item" data-page="aifeedback"><span class="icon"><i class="fas fa-bolt"></i></span><span
+              class="nav-label">Real-Time Feedback</span></div>
+          <div class="nav-item" data-page="sentiment"><span class="icon"><i class="fas fa-brain"></i></span><span
+              class="nav-label">Sentiment Analysis</span></div>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Assessments</div>
+          <div class="nav-item" data-page="assessment"><span class="icon"><i
+                class="fas fa-clipboard-check"></i></span><span class="nav-label">Assessments</span></div>
+          <div class="nav-item" data-page="codeeditor"><span class="icon"><i class="fas fa-code"></i></span><span
+              class="nav-label">Code Execution</span></div>
+          <div class="nav-item" data-page="proctoring"><span class="icon"><i class="fas fa-shield-alt"></i></span><span
+              class="nav-label">AI Proctoring</span></div>
+          <div class="nav-item" data-page="security"><span class="icon"><i class="fas fa-lock"></i></span><span
+              class="nav-label">Security Dashboard</span></div>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Learning</div>
+          <div class="nav-item" data-page="youtube"><span class="icon"><i class="fab fa-youtube"></i></span><span
+              class="nav-label">YouTube Curation</span></div>
+          <div class="nav-item" data-page="courses"><span class="icon"><i class="fas fa-graduation-cap"></i></span><span
+              class="nav-label">Course Integration</span></div>
+          <div class="nav-item" data-page="courseapis"><span class="icon"><i class="fas fa-database"></i></span><span
+              class="nav-label">Course APIs</span></div>
+          <div class="nav-item" data-page="aiml"><span class="icon"><i class="fas fa-robot"></i></span><span
+              class="nav-label">AI/ML Services</span></div>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title">Tools</div>
+          <div class="nav-item" data-page="scheduler"><span class="icon"><i class="fas fa-calendar-alt"></i></span><span
+              class="nav-label">Scheduler</span></div>
+          <div class="nav-item" data-page="admin"><span class="icon"><i class="fas fa-cog"></i></span><span
+              class="nav-label">Admin Panel</span></div>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-avatar">SR</div>
+        <div class="user-info">
+          <div class="user-name">Sasidhar R.</div>
+          <div class="user-role">Student</div>
+        </div>
+        <button class="sidebar-toggle" onclick="toggleSidebar()"><i class="fas fa-chevron-left"></i></button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+
+      <!-- ===== DASHBOARD ===== -->
+      <section class="page active" id="page-dashboard">
+        <div class="page-header">
+          <h1 class="page-title">Dashboard</h1>
+          <p class="page-subtitle">Your placement preparation overview</p>
+        </div>
+        <div class="grid-4 mb-24" id="dashStats"></div>
+        <div class="split-layout">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Weekly Progress</h3>
+            </div>
+            <div class="bar-chart" id="weeklyChart"></div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Interview Readiness</h3>
+            </div>
+            <div class="flex-center mt-16">
+              <div class="circle-progress" id="readinessGauge"><svg width="120" height="120">
+                  <circle class="bg" cx="60" cy="60" r="52" />
+                  <circle class="fg" cx="60" cy="60" r="52" stroke-dasharray="327" stroke-dashoffset="98" />
+                </svg>
+                <div class="value">70%<span class="label">Ready</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card mt-24">
+          <div class="card-header">
+            <h3 class="card-title">Recent Activity</h3>
+          </div>
+          <div class="timeline" id="activityTimeline"></div>
+        </div>
+      </section>
+
+      <!-- ===== PROFILE ===== -->
+      <section class="page" id="page-profile">
+        <div class="page-header">
+          <h1 class="page-title">Profile</h1>
+          <p class="page-subtitle">Manage your info and resume</p>
+        </div>
+        <div class="split-layout">
+          <div class="card">
+            <div class="input-group"><label>Full Name</label><input class="input-field" value="Sasidhar Rodda"></div>
+            <div class="input-group"><label>Email</label><input class="input-field" value="roddasasidhar5@gmail.com">
+            </div>
+            <div class="input-group"><label>Phone</label><input class="input-field" value="+91 98765 43210"></div>
+            <div class="input-group"><label>Skills</label>
+              <div id="skillTags" class="flex-gap" style="flex-wrap:wrap"></div>
+            </div>
+            <div class="input-group"><label>Bio</label><textarea class="input-field"
+                rows="3">Passionate full-stack developer with focus on AI/ML integration and modern web technologies.</textarea>
+            </div>
+            <button class="btn btn-primary mt-16"><i class="fas fa-save"></i> Save Changes</button>
+          </div>
+          <div class="card text-center">
+            <div class="user-avatar" style="width:80px;height:80px;font-size:28px;margin:0 auto 16px">SR</div>
+            <h3 style="font-size:18px;margin-bottom:4px">Sasidhar Rodda</h3>
+            <p class="text-sm" style="color:var(--text-secondary)">Computer Science • B.Tech 2026</p>
+            <div class="mt-24"><label class="btn btn-secondary" style="cursor:pointer"><i class="fas fa-upload"></i>
+                Upload Resume<input type="file" accept=".pdf" hidden id="resumeUpload"></label></div>
+            <div id="resumeStatus" class="mt-16"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== JOBS ===== -->
+      <section class="page" id="page-jobs">
+        <div class="page-header flex-between">
+          <div>
+            <h1 class="page-title">Job Listings</h1>
+            <p class="page-subtitle">Daily updated opportunities</p>
+          </div><button class="btn btn-primary" onclick="openModal('jobFilterModal')"><i class="fas fa-filter"></i>
+            Filters</button>
+        </div>
+        <div class="search-box mb-24"><span class="search-icon"><i class="fas fa-search"></i></span><input
+            class="input-field" id="jobSearch" placeholder="Search jobs by title, company, or skill..."
+            oninput="filterJobs()"></div>
+        <div class="grid-auto" id="jobGrid"></div>
+      </section>
+
+      <!-- ===== MARKET INTELLIGENCE ===== -->
+      <section class="page" id="page-market">
+        <div class="page-header">
+          <h1 class="page-title">Market Intelligence</h1>
+          <p class="page-subtitle">Job market trends and salary insights</p>
+        </div>
+        <div class="grid-3 mb-24">
+          <div class="card stat-card">
+            <div class="stat-icon icon-indigo"><i class="fas fa-fire"></i></div>
+            <div class="stat-value text-gradient">1.2M</div>
+            <div class="stat-label">Active Jobs</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon icon-emerald"><i class="fas fa-dollar-sign"></i></div>
+            <div class="stat-value text-gradient">₹12L</div>
+            <div class="stat-label">Avg Salary</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon icon-cyan"><i class="fas fa-trending-up"></i></div>
+            <div class="stat-value text-gradient">+18%</div>
+            <div class="stat-label">Growth Rate</div>
+          </div>
+        </div>
+        <div class="split-layout">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Trending Roles</h3>
+            </div>
+            <div class="bar-chart" id="trendingRolesChart"></div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Top Hiring Companies</h3>
+            </div>
+            <div id="topCompanies"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== JOB BOARD APIs ===== -->
+      <section class="page" id="page-jobapis">
+        <div class="page-header">
+          <h1 class="page-title">Job Board APIs</h1>
+          <p class="page-subtitle">Multi-source job aggregation dashboard</p>
+        </div>
+        <div class="grid-3 mb-24" id="apiStatusCards"></div>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Aggregated Feed Preview</h3>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="apiJobsTable">
+              <thead>
+                <tr>
+                  <th>Source</th>
+                  <th>Title</th>
+                  <th>Company</th>
+                  <th>Location</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== API COMPARISON ===== -->
+      <section class="page" id="page-apicompare">
+        <div class="page-header">
+          <h1 class="page-title">API Provider Comparison</h1>
+          <p class="page-subtitle">Side-by-side feature matrix</p>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table class="comparison-table" id="apiCompareTable"></table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== AI INTERVIEW ===== -->
+      <section class="page" id="page-interview">
+        <div class="page-header">
+          <h1 class="page-title">AI Interview Simulation</h1>
+          <p class="page-subtitle">Practice with our AI interviewer</p>
+        </div>
+        <div class="tabs" id="interviewTabs">
+          <div class="tab active" data-tab="hr">HR Round</div>
+          <div class="tab" data-tab="tech">Technical</div>
+          <div class="tab" data-tab="system">System Design</div>
+          <div class="tab" data-tab="behavioral">Behavioral</div>
+        </div>
+        <div class="split-layout-3-1">
+          <div class="interview-chat" id="interviewChat">
+            <div class="chat-area" id="interviewChatArea"></div>
+            <div class="chat-input-area"><input class="input-field" id="interviewInput"
+                placeholder="Type your answer..."><button class="btn btn-primary" onclick="sendInterviewMsg()"><i
+                  class="fas fa-paper-plane"></i></button></div>
+          </div>
+          <div>
+            <div class="card mb-16">
+              <div class="card-header">
+                <h3 class="card-title">Session Info</h3>
+              </div>
+              <div id="sessionInfo">
+                <p class="text-sm"><strong>Round:</strong> HR</p>
+                <p class="text-sm"><strong>Questions:</strong> <span id="qCount">0/10</span></p>
+                <p class="text-sm"><strong>Duration:</strong> <span id="interviewTimer">00:00</span></p>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Quick Actions</h3>
+              </div><button class="btn btn-secondary btn-sm mb-16" style="width:100%" onclick="startInterview()"><i
+                  class="fas fa-play"></i> Start Session</button><button class="btn btn-secondary btn-sm"
+                style="width:100%" onclick="endInterview()"><i class="fas fa-stop"></i> End & Review</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== VIDEO PRACTICE ===== -->
+      <section class="page" id="page-videopractice">
+        <div class="page-header">
+          <h1 class="page-title">Video & Communication Practice</h1>
+          <p class="page-subtitle">Record, review, and improve your delivery</p>
+        </div>
+        <div class="split-layout">
+          <div class="card">
+            <div class="webcam-frame" id="videoFrame">
+              <div class="cam-status"><span class="dot"></span> Camera Ready</div>
+              <div class="cam-placeholder"><span class="icon"><i class="fas fa-video"></i></span>
+                <p>Click record to start</p>
+              </div>
+            </div>
+            <div class="btn-group mt-16"><button class="btn btn-primary" onclick="toggleRecording()"><i
+                  class="fas fa-circle" id="recIcon"></i> <span id="recLabel">Record</span></button><button
+                class="btn btn-secondary"><i class="fas fa-redo"></i> Retake</button></div>
+          </div>
+          <div>
+            <div class="card mb-16">
+              <div class="card-header">
+                <h3 class="card-title">AI Communication Score</h3>
+              </div>
+              <div class="flex-center">
+                <div class="circle-progress"><svg width="120" height="120">
+                    <circle class="bg" cx="60" cy="60" r="52" />
+                    <circle class="fg" cx="60" cy="60" r="52" stroke-dasharray="327" stroke-dashoffset="131"
+                      style="stroke:var(--accent-emerald)" />
+                  </svg>
+                  <div class="value">60%<span class="label">Score</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Feedback</h3>
+              </div>
+              <div id="videoFeedback">
+                <div class="alert-bar success"><i class="fas fa-check"></i> Good eye contact maintained</div>
+                <div class="alert-bar warning"><i class="fas fa-exclamation-triangle"></i> 12 filler words detected
+                </div>
+                <div class="alert-bar info"><i class="fas fa-info-circle"></i> Pace: Slightly fast</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== REAL-TIME AI FEEDBACK ===== -->
+      <section class="page" id="page-aifeedback">
+        <div class="page-header">
+          <h1 class="page-title">Real-Time AI Feedback</h1>
+          <p class="page-subtitle">Live scoring and improvement suggestions</p>
+        </div>
+        <div class="grid-3 mb-24">
+          <div class="card stat-card">
+            <div class="stat-icon icon-emerald"><i class="fas fa-star"></i></div>
+            <div class="stat-value text-gradient">8.2</div>
+            <div class="stat-label">Avg Score</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon icon-violet"><i class="fas fa-lightbulb"></i></div>
+            <div class="stat-value text-gradient">47</div>
+            <div class="stat-label">Tips Given</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon icon-cyan"><i class="fas fa-arrow-up"></i></div>
+            <div class="stat-value text-gradient">+23%</div>
+            <div class="stat-label">Improvement</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Live Feedback Session</h3>
+          </div>
+          <div class="feedback-card">
+            <div class="fb-title">Confidence Meter</div>
+            <div class="confidence-meter">
+              <div class="meter-fill" style="width:72%;background:var(--gradient-success)"></div>
+            </div>
+            <p class="text-xs mt-16" style="color:var(--text-secondary)">Your confidence level is above average. Keep
+              maintaining eye contact.</p>
+          </div>
+          <div class="feedback-card mt-16">
+            <div class="fb-title">Answer Quality</div>
+            <div class="confidence-meter">
+              <div class="meter-fill" style="width:85%;background:var(--gradient-main)"></div>
+            </div>
+            <p class="text-xs mt-16" style="color:var(--text-secondary)">Excellent use of STAR method. Consider adding
+              more quantifiable results.</p>
+          </div>
+          <div class="feedback-card mt-16">
+            <div class="fb-title">Communication Clarity</div>
+            <div class="confidence-meter">
+              <div class="meter-fill" style="width:60%;background:var(--gradient-warm)"></div>
+            </div>
+            <p class="text-xs mt-16" style="color:var(--text-secondary)">Reduce filler words. Pause briefly instead of
+              saying "um" or "like".</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== SENTIMENT ANALYSIS ===== -->
+      <section class="page" id="page-sentiment">
+        <div class="page-header">
+          <h1 class="page-title">Behavioral & Sentiment Analysis</h1>
+          <p class="page-subtitle">Understand your non-verbal communication</p>
+        </div>
+        <div class="grid-3 mb-24">
+          <div class="card text-center">
+            <h4 class="mb-16">Stress Level</h4>
+            <div class="gauge-wrap">
+              <div class="gauge">
+                <div class="gauge-bg"></div>
+                <div class="gauge-needle" id="stressNeedle" style="transform:rotate(-30deg)"></div>
+              </div>
+              <div class="gauge-label">Low</div>
+            </div>
+          </div>
+          <div class="card text-center">
+            <h4 class="mb-16">Overall Sentiment</h4>
+            <div class="gauge-wrap">
+              <div class="gauge">
+                <div class="gauge-bg"></div>
+                <div class="gauge-needle" id="sentimentNeedle" style="transform:rotate(20deg)"></div>
+              </div>
+              <div class="gauge-label">Positive</div>
+            </div>
+          </div>
+          <div class="card text-center">
+            <h4 class="mb-16">Engagement</h4>
+            <div class="gauge-wrap">
+              <div class="gauge">
+                <div class="gauge-bg"></div>
+                <div class="gauge-needle" id="engagementNeedle" style="transform:rotate(40deg)"></div>
+              </div>
+              <div class="gauge-label">High</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Expression Timeline</h3>
+          </div>
+          <div class="bar-chart" id="sentimentTimeline" style="height:120px"></div>
+        </div>
+      </section>
+
+      <!-- ===== ASSESSMENT ===== -->
+      <section class="page" id="page-assessment">
+        <div class="page-header">
+          <h1 class="page-title">Assessment & Proctoring</h1>
+          <p class="page-subtitle">Timed tests with anti-cheating measures</p>
+        </div>
+        <div class="tabs">
+          <div class="tab active" data-tab="aptitude" onclick="switchAssessment('aptitude')">Aptitude</div>
+          <div class="tab" data-tab="verbal" onclick="switchAssessment('verbal')">Verbal</div>
+          <div class="tab" data-tab="logical" onclick="switchAssessment('logical')">Logical</div>
+          <div class="tab" data-tab="coding" onclick="switchAssessment('coding')">Coding</div>
+        </div>
+        <div class="split-layout-3-1">
+          <div class="card" id="quizArea">
+            <div class="flex-between mb-16">
+              <h3 id="quizQuestion">Click "Start Quiz" to begin</h3><span class="badge badge-amber" id="quizTimer">⏱
+                00:00</span>
+            </div>
+            <div id="quizOptions"></div>
+            <div class="btn-group mt-24"><button class="btn btn-primary" id="quizAction"
+                onclick="handleQuizAction()">Start Quiz</button></div>
+          </div>
+          <div>
+            <div class="card mb-16">
+              <h4 class="mb-16">Progress</h4>
+              <p class="text-sm">Question <span id="quizProgress">0</span>/10</p>
+              <div class="progress-bar mt-16">
+                <div class="progress-fill" id="quizProgressBar" style="width:0%"></div>
+              </div>
+            </div>
+            <div class="card">
+              <h4 class="mb-16">Score</h4>
+              <div class="stat-value text-gradient text-center" id="quizScore">—</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== CODE EDITOR ===== -->
+      <section class="page" id="page-codeeditor">
+        <div class="page-header">
+          <h1 class="page-title">Secure Code Execution</h1>
+          <p class="page-subtitle">Write, run, and assess code in-browser</p>
+        </div>
+        <div class="flex-between mb-16">
+          <div class="flex-gap"><select class="input-field" id="langSelect" style="width:160px">
+              <option>JavaScript</option>
+              <option>Python</option>
+              <option>Java</option>
+              <option>C++</option>
+            </select><select class="input-field" id="problemSelect" style="width:220px">
+              <option>Two Sum</option>
+              <option>Reverse String</option>
+              <option>FizzBuzz</option>
+              <option>Palindrome Check</option>
+            </select></div>
+          <div class="btn-group">
+            <button class="btn btn-secondary btn-sm" onclick="clearCode()" title="Clear editor"><i
+                class="fas fa-eraser"></i> Clear</button>
+            <button class="btn btn-secondary btn-sm" onclick="resetCode()" title="Reset to boilerplate"><i
+                class="fas fa-undo"></i> Reset</button>
+            <button class="btn btn-secondary btn-sm" onclick="copyCode()" title="Copy to clipboard"><i
+                class="fas fa-copy"></i> Copy</button>
+            <button class="btn btn-primary" onclick="runCode()"><i class="fas fa-play"></i> Run</button>
+            <button class="btn btn-success" onclick="submitCode()"><i class="fas fa-check"></i> Submit</button>
+          </div>
+        </div>
+        <div class="code-editor-wrap">
+          <div class="code-editor-toolbar">
+            <div class="dots"><span></span><span></span><span></span></div><span class="text-xs"
+              style="color:var(--text-muted);margin-left:auto" id="langLabel">JavaScript</span>
+          </div>
+          <div class="code-editor"><textarea id="codeInput" spellcheck="false">// Write your solution here
+function twoSum(nums, target) {
+  const map = new Map();
+  for (let i = 0; i &lt; nums.length; i++) {
+    const complement = target - nums[i];
+    if (map.has(complement)) return [map.get(complement), i];
+    map.set(nums[i], i);
+  }
+  return [];
+}</textarea></div>
+          <div class="code-output" id="codeOutput">// Output will appear here...</div>
+        </div>
+        <div class="grid-3 mt-24">
+          <div class="card stat-card">
+            <div class="stat-icon icon-emerald"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-value text-gradient" id="testsPassed">—</div>
+            <div class="stat-label">Tests Passed</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon icon-cyan"><i class="fas fa-clock"></i></div>
+            <div class="stat-value text-gradient" id="execTime">—</div>
+            <div class="stat-label">Exec Time</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon icon-violet"><i class="fas fa-star"></i></div>
+            <div class="stat-value text-gradient" id="codeQuality">—</div>
+            <div class="stat-label">Quality Score</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== PROCTORING ===== -->
+      <section class="page" id="page-proctoring">
+        <div class="page-header">
+          <h1 class="page-title">Multi-Level AI Proctoring</h1>
+          <p class="page-subtitle">Advanced anti-cheating monitoring</p>
+        </div>
+        <div class="split-layout">
+          <div>
+            <div class="card mb-16">
+              <div class="webcam-frame">
+                <div class="cam-status"><span class="dot"></span> Monitoring Active</div>
+                <div class="cam-placeholder"><span class="icon"><i class="fas fa-user-shield"></i></span>
+                  <p>AI Proctoring Enabled</p>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <h4 class="mb-16">Proctoring Levels</h4>
+              <div class="alert-bar success"><i class="fas fa-check-circle"></i> <strong>Level 1:</strong> Browser
+                lockdown — Active</div>
+              <div class="alert-bar info"><i class="fas fa-eye"></i> <strong>Level 2:</strong> Face detection — Active
+              </div>
+              <div class="alert-bar warning"><i class="fas fa-exclamation-triangle"></i> <strong>Level 3:</strong>
+                Behavior analysis — Monitoring</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Activity Log</h3>
+            </div>
+            <div class="timeline" id="proctoringLog"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== SECURITY DASHBOARD ===== -->
+      <section class="page" id="page-security">
+        <div class="page-header">
+          <h1 class="page-title">Security & Proctoring Dashboard</h1>
+          <p class="page-subtitle">Session integrity and audit reports</p>
+        </div>
+        <div class="grid-4 mb-24">
+          <div class="card stat-card">
+            <div class="stat-icon icon-emerald"><i class="fas fa-shield-alt"></i></div>
+            <div class="stat-value text-gradient">98%</div>
+            <div class="stat-label">Integrity</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon icon-indigo"><i class="fas fa-lock"></i></div>
+            <div class="stat-value text-gradient">AES-256</div>
+            <div class="stat-label">Encryption</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon icon-amber"><i class="fas fa-flag"></i></div>
+            <div class="stat-value text-gradient">3</div>
+            <div class="stat-label">Violations</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon icon-cyan"><i class="fas fa-check-double"></i></div>
+            <div class="stat-value text-gradient">142</div>
+            <div class="stat-label">Sessions</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Violation Log</h3>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="violationTable">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Type</th>
+                  <th>Severity</th>
+                  <th>Details</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== YOUTUBE CURATION ===== -->
+      <section class="page" id="page-youtube">
+        <div class="page-header">
+          <h1 class="page-title">Learning Content Curation</h1>
+          <p class="page-subtitle">YouTube tutorials and study resources</p>
+        </div>
+        <div class="flex-gap mb-24">
+          <div class="search-box" style="flex:1"><span class="search-icon"><i class="fas fa-search"></i></span><input
+              class="input-field" id="ytSearch" placeholder="Search tutorials..." oninput="filterVideos()"></div><select
+            class="input-field" id="ytCategory" style="width:180px" onchange="filterVideos()">
+            <option value="">All Categories</option>
+            <option>DSA</option>
+            <option>Web Dev</option>
+            <option>Machine Learning</option>
+            <option>System Design</option>
+            <option>Interview Prep</option>
+          </select>
+        </div>
+        <div class="grid-3" id="videoGrid"></div>
+      </section>
+
+      <!-- ===== COURSE INTEGRATION ===== -->
+      <section class="page" id="page-courses">
+        <div class="page-header">
+          <h1 class="page-title">Learning Content Integration</h1>
+          <p class="page-subtitle">Curated courses from top platforms</p>
+        </div>
+        <div class="tabs">
+          <div class="tab active" onclick="filterCourses('all', this)">All</div>
+          <div class="tab" onclick="filterCourses('coursera', this)">Coursera</div>
+          <div class="tab" onclick="filterCourses('udemy', this)">Udemy</div>
+          <div class="tab" onclick="filterCourses('edx', this)">edX</div>
+        </div>
+        <div class="grid-3" id="courseGrid"></div>
+      </section>
+
+      <!-- ===== COURSE APIs ===== -->
+      <section class="page" id="page-courseapis">
+        <div class="page-header">
+          <h1 class="page-title">YouTube & Course APIs</h1>
+          <p class="page-subtitle">API integration and content pipeline</p>
+        </div>
+        <div class="grid-2 mb-24">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">YouTube Data API v3</h3><span class="badge badge-emerald">Connected</span>
+            </div>
+            <p class="text-sm" style="color:var(--text-secondary)">Fetch tutorials by keyword. Rate limit: 10,000
+              units/day</p>
+            <div class="progress-bar mt-16">
+              <div class="progress-fill" style="width:34%"></div>
+            </div>
+            <p class="text-xs mt-16" style="color:var(--text-muted)">3,400 / 10,000 units used today</p>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Coursera API</h3><span class="badge badge-amber">Limited</span>
+            </div>
+            <p class="text-sm" style="color:var(--text-secondary)">Course catalog sync. 500 courses indexed.</p>
+            <div class="progress-bar mt-16">
+              <div class="progress-fill emerald" style="width:65%"></div>
+            </div>
+            <p class="text-xs mt-16" style="color:var(--text-muted)">325 / 500 courses synced</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">API Fetch Preview</h3>
+          </div>
+          <div class="code-editor-wrap">
+            <div class="code-editor-toolbar">
+              <div class="dots"><span></span><span></span><span></span></div><span class="text-xs"
+                style="color:var(--text-muted);margin-left:auto">JSON Response</span>
+            </div>
+            <div class="code-output" style="max-height:250px" id="apiPreview"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== AI/ML SERVICES ===== -->
+      <section class="page" id="page-aiml">
+        <div class="page-header">
+          <h1 class="page-title">AI/ML Services Hub</h1>
+          <p class="page-subtitle">Resume analysis, skill gaps, and career prediction</p>
+        </div>
+        <div class="grid-2 mb-24">
+          <div class="card text-center">
+            <h4 class="mb-16">Resume ATS Score</h4>
+            <div class="flex-center">
+              <div class="circle-progress" id="atsGauge"><svg width="120" height="120">
+                  <circle class="bg" cx="60" cy="60" r="52" />
+                  <circle class="fg" cx="60" cy="60" r="52" stroke-dasharray="327" stroke-dashoffset="65"
+                    style="stroke:var(--accent-emerald)" />
+                </svg>
+                <div class="value">80%<span class="label">ATS Score</span></div>
+              </div>
+            </div><button class="btn btn-primary btn-sm mt-16" onclick="analyzeResume()"><i class="fas fa-magic"></i>
+              Analyze Resume</button>
+          </div>
+          <div class="card text-center">
+            <h4 class="mb-16">Interview Readiness</h4>
+            <div class="flex-center">
+              <div class="circle-progress"><svg width="120" height="120">
+                  <circle class="bg" cx="60" cy="60" r="52" />
+                  <circle class="fg" cx="60" cy="60" r="52" stroke-dasharray="327" stroke-dashoffset="114"
+                    style="stroke:var(--accent-violet)" />
+                </svg>
+                <div class="value">65%<span class="label">Ready</span></div>
+              </div>
+            </div><button class="btn btn-secondary btn-sm mt-16"><i class="fas fa-chart-bar"></i> View Report</button>
+          </div>
+        </div>
+        <div class="card mb-24">
+          <div class="card-header">
+            <h3 class="card-title">Skill Gap Analysis</h3>
+          </div>
+          <div id="skillGapBars"></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Career Path Predictor</h3>
+          </div>
+          <div id="careerPaths"></div>
+        </div>
+      </section>
+
+      <!-- ===== SCHEDULER ===== -->
+      <section class="page" id="page-scheduler">
+        <div class="page-header flex-between">
+          <div>
+            <h1 class="page-title">Scheduler & Notifications</h1>
+            <p class="page-subtitle">Calendar, events, and reminders</p>
+          </div><button class="btn btn-primary" onclick="openModal('eventModal')"><i class="fas fa-plus"></i> Add
+            Event</button>
+        </div>
+        <div class="split-layout-3-1">
+          <div class="card">
+            <div class="flex-between mb-16"><button class="btn btn-icon btn-secondary" onclick="changeMonth(-1)"><i
+                  class="fas fa-chevron-left"></i></button>
+              <h3 id="calendarTitle">February 2026</h3><button class="btn btn-icon btn-secondary"
+                onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+          </div>
+          <div>
+            <div class="card mb-16">
+              <div class="card-header">
+                <h3 class="card-title">Upcoming</h3>
+              </div>
+              <div id="upcomingEvents"></div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Reminders</h3>
+              </div>
+              <div id="reminderList"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== ADMIN ===== -->
+      <section class="page" id="page-admin">
+        <div class="page-header">
+          <h1 class="page-title">Admin Panel</h1>
+          <p class="page-subtitle">System management and analytics</p>
+        </div>
+        <div class="grid-4 mb-24">
+          <div class="card stat-card">
+            <div class="stat-icon icon-indigo"><i class="fas fa-users"></i></div>
+            <div class="stat-value text-gradient">1,247</div>
+            <div class="stat-label">Total Users</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon icon-emerald"><i class="fas fa-briefcase"></i></div>
+            <div class="stat-value text-gradient">342</div>
+            <div class="stat-label">Active Jobs</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon icon-violet"><i class="fas fa-clipboard-check"></i></div>
+            <div class="stat-value text-gradient">89</div>
+            <div class="stat-label">Tests Today</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon icon-cyan"><i class="fas fa-percentage"></i></div>
+            <div class="stat-value text-gradient">76%</div>
+            <div class="stat-label">Placement Rate</div>
+          </div>
+        </div>
+        <div class="card mb-24">
+          <div class="card-header">
+            <h3 class="card-title">User Management</h3><button class="btn btn-primary btn-sm"><i
+                class="fas fa-plus"></i> Add User</button>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="userTable">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Post New Job</h3>
+          </div>
+          <div class="grid-2">
+            <div class="input-group"><label>Job Title</label><input class="input-field"
+                placeholder="e.g. Software Engineer"></div>
+            <div class="input-group"><label>Company</label><input class="input-field" placeholder="e.g. Google"></div>
+            <div class="input-group"><label>Location</label><input class="input-field" placeholder="e.g. Bangalore">
+            </div>
+            <div class="input-group"><label>Salary Range</label><input class="input-field" placeholder="e.g. 10-15 LPA">
+            </div>
+          </div>
+          <div class="input-group"><label>Description</label><textarea class="input-field" rows="3"
+              placeholder="Job description..."></textarea></div><button class="btn btn-primary mt-16"><i
+              class="fas fa-paper-plane"></i> Post Job</button>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Login Modal -->
+  <div class="modal-overlay" id="loginModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Welcome Back</h3><button class="modal-close" onclick="closeModal('loginModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group"><label>Email</label><input class="input-field" placeholder="your@email.com"></div>
+        <div class="input-group"><label>Password</label><input class="input-field" type="password"
+            placeholder="••••••••"></div><button class="btn btn-primary btn-lg" style="width:100%">Sign In</button>
+        <p class="text-center text-sm mt-16" style="color:var(--text-secondary)">Or sign in with</p>
+        <div class="btn-group mt-16" style="justify-content:center"><button class="btn btn-secondary btn-sm"><i
+              class="fab fa-google"></i> Google</button><button class="btn btn-secondary btn-sm"><i
+              class="fab fa-linkedin"></i> LinkedIn</button><button class="btn btn-secondary btn-sm"><i
+              class="fab fa-github"></i> GitHub</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Event Modal -->
+  <div class="modal-overlay" id="eventModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Add Event</h3><button class="modal-close" onclick="closeModal('eventModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group"><label>Event Title</label><input class="input-field" id="eventTitle"
+            placeholder="e.g. Google Interview"></div>
+        <div class="input-group"><label>Date</label><input class="input-field" type="date" id="eventDate"></div>
+        <div class="input-group"><label>Time</label><input class="input-field" type="time" id="eventTime"></div>
+        <div class="input-group"><label>Type</label><select class="input-field" id="eventType">
+            <option>Interview</option>
+            <option>Mock Test</option>
+            <option>Placement Drive</option>
+            <option>Deadline</option>
+          </select></div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-secondary"
+          onclick="closeModal('eventModal')">Cancel</button><button class="btn btn-primary" onclick="addEvent()">Add
+          Event</button></div>
+    </div>
+  </div>
+
+  <!-- Job Filter Modal -->
+  <div class="modal-overlay" id="jobFilterModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Filter Jobs</h3><button class="modal-close" onclick="closeModal('jobFilterModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group"><label>Location</label><select class="input-field">
+            <option>All Locations</option>
+            <option>Bangalore</option>
+            <option>Hyderabad</option>
+            <option>Mumbai</option>
+            <option>Delhi</option>
+            <option>Remote</option>
+          </select></div>
+        <div class="input-group"><label>Role Type</label><select class="input-field">
+            <option>All Types</option>
+            <option>Full-Time</option>
+            <option>Internship</option>
+            <option>Contract</option>
+          </select></div>
+        <div class="input-group"><label>Salary Range</label><select class="input-field">
+            <option>Any</option>
+            <option>3-6 LPA</option>
+            <option>6-12 LPA</option>
+            <option>12-25 LPA</option>
+            <option>25+ LPA</option>
+          </select></div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-secondary"
+          onclick="closeModal('jobFilterModal')">Cancel</button><button class="btn btn-primary"
+          onclick="closeModal('jobFilterModal')">Apply Filters</button></div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Chatbot -->
+  <div class="chatbot-fab" id="chatFab" onclick="toggleChatbot()"><i class="fas fa-comment-dots"></i></div>
+  <div class="chatbot-panel" id="chatPanel">
+    <div class="chatbot-header"><span class="dot"></span><strong>PlaceAI Assistant</strong><button class="modal-close"
+        style="margin-left:auto" onclick="toggleChatbot()">×</button></div>
+    <div class="chatbot-messages" id="chatMessages"></div>
+    <div class="chatbot-input"><input id="chatInput" placeholder="Ask anything..."
+        onkeydown="handleChatKey(event)"><button onclick="sendChat()"><i class="fas fa-paper-plane"></i></button></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
