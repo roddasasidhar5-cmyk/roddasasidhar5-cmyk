@@ -1,11 +1,12 @@
 {
-  "name": "placement-portal",
-  "version": "1.0.0",
-  "description": "AI-Powered Placement Assistant",
-  "main": "index.html",
   "scripts": {
-    "dev": "npx -y serve ."
+    "dev": "npm run dev --prefix Placementt",
+    "backend": "npm run dev --prefix Placementt/backend",
+    "frontend": "npm run dev --prefix Placementt/frontend"
   },
-  "author": "Sasidhar",
-  "license": "ISC"
+  "dependencies": {
+    "mongodb": "^7.1.0",
+    "pdf-parse": "^2.4.5",
+    "pdfjs-dist": "^3.11.174"
+  }
 }
