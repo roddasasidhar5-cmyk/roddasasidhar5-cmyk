@@ -22,10 +22,12 @@ const authRoutes = require('./routes/authRoutes');
 const jobRoutes = require('./routes/jobRoutes');
 const assessmentRoutes = require('./routes/assessmentRoutes');
 const learningRoutes = require('./routes/learningRoutes');
+const aiRoutes = require('./routes/aiRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/assessments', assessmentRoutes);
 app.use('/api/learning', learningRoutes);
+app.use('/api/ai', aiRoutes);
 
 module.exports = app;

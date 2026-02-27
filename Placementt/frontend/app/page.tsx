@@ -7,7 +7,8 @@ import {
   Clock,
   Calendar,
   ChevronRight,
-  Target
+  Target,
+  Briefcase
 } from 'lucide-react';
 
 const stats = [
@@ -90,6 +91,27 @@ export default function Dashboard() {
                   <p className="text-[10px] text-slate-500 uppercase tracking-tighter">{event.type} • {event.date}</p>
                 </div>
               ))}
+            </div>
+          </div>
+
+          <div className="glass p-6 rounded-2xl bg-gradient-to-br from-indigo-500/10 to-transparent border border-indigo-500/20">
+            <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+              <TrendingUp className="w-5 h-5 text-indigo-400" />
+              AI Insights
+            </h2>
+            <div className="space-y-4">
+               <div className="p-3 rounded-xl bg-slate-900/50 border border-white/5">
+                  <p className="text-xs text-slate-400 mb-1">Resume Strength</p>
+                  <div className="flex items-center gap-3">
+                     <div className="flex-1 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                        <div className="h-full bg-indigo-500 w-[78%]" />
+                     </div>
+                     <span className="text-xs font-bold text-white">78%</span>
+                  </div>
+               </div>
+               <p className="text-[10px] text-slate-500 leading-relaxed italic">
+                 "Your interview performance in DSA is improving. Focus on Graph algorithms for the Google interview."
+               </p>
             </div>
           </div>
 
