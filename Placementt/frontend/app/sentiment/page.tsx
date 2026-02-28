@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Activity, Send, RefreshCcw, Sparkles, TrendingUp, Heart, AlertCircle } from 'lucide-react';
+import API_BASE_URL from '../config/api';
 
 type SentimentResult = {
   overall: string;
@@ -39,7 +40,7 @@ export default function SentimentPage() {
     setLoading(true);
     setResult(null);
     try {
-      const res = await fetch('http://localhost:5001/api/ai/sentiment/analyze', {
+      const res = await fetch(`${API_BASE_URL}/ai/sentiment/analyze`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text }),

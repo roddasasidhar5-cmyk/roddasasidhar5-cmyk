@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ScanLine, RefreshCcw, Sparkles, CheckCircle, XCircle, Target, Lightbulb, BarChart3 } from 'lucide-react';
+import API_BASE_URL from '../config/api';
 
 type ATSResult = {
   ats_score: number;
@@ -44,7 +45,7 @@ export default function ATSScorePage() {
     setLoading(true);
     setResult(null);
     try {
-      const res = await fetch('http://localhost:5001/api/ai/ats/score', {
+      const res = await fetch(`${API_BASE_URL}/ai/ats/score`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ resumeText, jobDescription }),

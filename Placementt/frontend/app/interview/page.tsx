@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { 
   Play, 
   Send, 
@@ -13,10 +13,13 @@ import {
   Award,
   BookOpen
 } from 'lucide-react';
+import API_BASE_URL from '../config/api';
 
 export default function InterviewPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [step, setStep] = useState('setup'); // setup, interview, feedback
-  const [role, setRole] = useState('');
+  const [role, setRole] = useState(searchParams.get('role') || '');
   const [loading, setLoading] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState('');
   const [userAnswer, setUserAnswer] = useState('');
@@ -46,7 +49,7 @@ export default function InterviewPage() {
     if (!role) return;
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5001/api/ai/interview/start', {
+      const res = await fetch(`${API_BASE_URL}/ai/interview/start`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ role }),
@@ -76,7 +79,7 @@ export default function InterviewPage() {
     try {
       if (questionCount >= maxQuestions) {
         // Get Result
-        const res = await fetch('http://localhost:5001/api/ai/interview/result', {
+      const res = await fetch(`${API_BASE_URL}/ai/interview/result`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ role, chatHistory: updatedHistory }),
@@ -86,7 +89,7 @@ export default function InterviewPage() {
         setStep('feedback');
       } else {
         // Get Next Question
-        const res = await fetch('http://localhost:5001/api/ai/interview/next', {
+        const res = await fetch(`${API_BASE_URL}/ai/interview/next`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 

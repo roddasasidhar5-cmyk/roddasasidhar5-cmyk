@@ -1,23 +1,15 @@
-const OpenAI = require('openai');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-const openai = new OpenAI({
-  apiKey: process.env.GEMINI_API_KEY, // Keeping the same env var name for continuity
-  baseURL: 'https://integrate.api.nvidia.com/v1',
-});
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
 exports.getAIResponse = async (prompt) => {
   try {
-    const completion = await openai.chat.completions.create({
-      model: "meta/llama-3.1-8b-instruct",
-      messages: [{"role": "user", "content": prompt}],
-      temperature: 0.2,
-      top_p: 0.7,
-      max_tokens: 1024,
-    });
-    return completion.choices[0].message.content;
+    const result = await model.generateContent(prompt);
+    return result.response.text();
   } catch (error) {
-    console.error("NVIDIA AI Error:", error.message);
-    throw new Error("Failed to get AI response from NVIDIA");
+    console.error("Gemini AI Error:", error.message);
+    throw new Error("Failed to get AI response from Gemini");
   }
 };
 
@@ -36,55 +28,40 @@ exports.analyzeResume = async (resumeText) => {
   `;
   
   try {
-    const completion = await openai.chat.completions.create({
-      model: "meta/llama-3.1-8b-instruct",
-      messages: [{"role": "user", "content": prompt}],
-      temperature: 0.2,
-      top_p: 0.7,
-      max_tokens: 2048,
-    });
-    return completion.choices[0].message.content;
+    const result = await model.generateContent(prompt);
+    return result.response.text();
   } catch (error) {
-    console.error("NVIDIA Resume Analysis Error:", error.message);
-    throw new Error("Failed to analyze resume with NVIDIA");
+    console.error("Gemini Resume Analysis Error:", error.message);
+    throw new Error("Failed to analyze resume with Gemini");
   }
 };
+
 exports.generateQuiz = async (category) => {
   const prompt = `
     Generate a JSON quiz on the topic of "${category}" suitable for a placement assessment.
     Provide 5 multiple-choice questions.
-    Return ONLY a JSON array of objects with the following structure:
+    Return ONLY a JSON array of objects with the following structure without any markdown formatting wrappers:
     [
       {
         "q": "question text",
         "options": ["opt1", "opt2", "opt3", "opt4"],
-        "correct": index_of_correct_option (0-3)
+        "correct": index_of_correct_option_0_to_3
       }
     ]
-    Do not include any other text, just the JSON array.
   `;
   
   try {
-    const completion = await openai.chat.completions.create({
-      model: "meta/llama-3.1-8b-instruct",
-      messages: [{"role": "user", "content": prompt}],
-      temperature: 0.2,
-      top_p: 0.7,
-      max_tokens: 1500,
-    });
-    
-    // Attempt to parse JSON from the response
-    const content = completion.choices[0].message.content;
-    const jsonMatch = content.match(/\[.*\]/s);
-    if (jsonMatch) {
-      return JSON.parse(jsonMatch[0]);
-    }
+    const result = await model.generateContent(prompt);
+    let content = result.response.text();
+    // Clean up if it gave markdown blocks
+    content = content.replace(/```json/g, '').replace(/```/g, '').trim();
     return JSON.parse(content);
   } catch (error) {
-    console.error("NVIDIA Quiz Generation Error:", error.message);
-    throw new Error("Failed to generate quiz with NVIDIA");
+    console.error("Gemini Quiz Generation Error:", error.message);
+    throw new Error("Failed to generate quiz with Gemini");
   }
 };
+
 exports.generateRoadmap = async (goal) => {
   const prompt = `
     Create a detailed learning roadmap for someone aiming to become a "${goal}".
@@ -99,20 +76,13 @@ exports.generateRoadmap = async (goal) => {
   `;
   
   try {
-    const completion = await openai.chat.completions.create({
-      model: "meta/llama-3.1-8b-instruct",
-      messages: [{"role": "user", "content": prompt}],
-      temperature: 0.2,
-      top_p: 0.7,
-      max_tokens: 2048,
-    });
-    return completion.choices[0].message.content;
+    const result = await model.generateContent(prompt);
+    return result.response.text();
   } catch (error) {
-    console.error("NVIDIA Roadmap Generation Error:", error.message);
-    throw new Error("Failed to generate roadmap with NVIDIA");
+    console.error("Gemini Roadmap Generation Error:", error.message);
+    throw new Error("Failed to generate roadmap with Gemini");
   }
 };
-
 
 exports.evaluateVideoPractice = async (topic, transcript) => {
   const prompt = `
@@ -121,26 +91,21 @@ exports.evaluateVideoPractice = async (topic, transcript) => {
     Their spoken answer (transcript) was:
     "${transcript}"
 
-    Please evaluate their answer on the following dimensions and provide constructive feedback:
+    Please evaluate their answer on the following dimensions:
     1. **Content & Accuracy** (score /10): Did they cover key concepts?
     2. **Clarity & Structure** (score /10): Was the answer well-organized?
     3. **Communication Style** (score /10): Was the language professional and confident?
-    4. **Specific Improvements**: Give 3 concrete bullet-point tips to improve.
-    5. **A Better Sample Answer**: Provide a short model answer (3-4 sentences).
+    4. **Sentimental & Emotional Analysis**: Analyze the tone (e.g., Confident, Nervous, Enthusiastic) and the sentiment (Positive/Neutral/Negative).
+    5. **Specific Improvements**: Give 3 concrete bullet-point tips to improve.
+    6. **A Better Sample Answer**: Provide a short model answer (3-4 sentences).
 
-    Format clearly with headers and bullet points.
+    Format clearly with bold headers and bullet points.
   `;
   try {
-    const completion = await openai.chat.completions.create({
-      model: "meta/llama-3.1-8b-instruct",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.3,
-      top_p: 0.7,
-      max_tokens: 1500,
-    });
-    return completion.choices[0].message.content;
+    const result = await model.generateContent(prompt);
+    return result.response.text();
   } catch (error) {
-    console.error("NVIDIA Video Practice Error:", error.message);
+    console.error("Gemini Video Practice Error:", error.message);
     throw new Error("Failed to evaluate video practice");
   }
 };
@@ -168,16 +133,10 @@ exports.evaluateRealtimeFeedback = async (question, answer) => {
     Return as structured markdown.
   `;
   try {
-    const completion = await openai.chat.completions.create({
-      model: "meta/llama-3.1-8b-instruct",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.2,
-      top_p: 0.7,
-      max_tokens: 1500,
-    });
-    return completion.choices[0].message.content;
+    const result = await model.generateContent(prompt);
+    return result.response.text();
   } catch (error) {
-    console.error("NVIDIA Realtime Feedback Error:", error.message);
+    console.error("Gemini Realtime Feedback Error:", error.message);
     throw new Error("Failed to evaluate answer");
   }
 };
@@ -189,16 +148,16 @@ exports.analyzeSentiment = async (text) => {
     
     Text: "${text}"
     
-    Provide a JSON response with this EXACT structure (return ONLY the JSON, no other text):
+    Provide ONLY a JSON response with this EXACT structure (no markdown wrappers like \`\`\`json):
     {
       "overall": "Positive|Neutral|Negative",
-      "confidence_score": 0-100,
+      "confidence_score": 85,
       "emotions": {
-        "confident": 0-100,
-        "nervous": 0-100,
-        "enthusiastic": 0-100,
-        "professional": 0-100,
-        "assertive": 0-100
+        "confident": 80,
+        "nervous": 10,
+        "enthusiastic": 70,
+        "professional": 90,
+        "assertive": 60
       },
       "tone": "Formal|Semi-formal|Informal",
       "strengths": ["strength 1", "strength 2"],
@@ -207,19 +166,12 @@ exports.analyzeSentiment = async (text) => {
     }
   `;
   try {
-    const completion = await openai.chat.completions.create({
-      model: "meta/llama-3.1-8b-instruct",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.1,
-      top_p: 0.7,
-      max_tokens: 800,
-    });
-    const content = completion.choices[0].message.content;
-    const jsonMatch = content.match(/\{[\s\S]*\}/);
-    if (jsonMatch) return JSON.parse(jsonMatch[0]);
+    const result = await model.generateContent(prompt);
+    let content = result.response.text();
+    content = content.replace(/```json/g, '').replace(/```/g, '').trim();
     return JSON.parse(content);
   } catch (error) {
-    console.error("NVIDIA Sentiment Error:", error.message);
+    console.error("Gemini Sentiment Error:", error.message);
     throw new Error("Failed to analyze sentiment");
   }
 };
@@ -233,6 +185,7 @@ exports.buildResume = async (userProfile) => {
     Phone: ${userProfile.phone || 'N/A'}
     LinkedIn: ${userProfile.linkedin || 'N/A'}
     Target Role: ${userProfile.targetRole}
+    Career Objective: ${userProfile.careerObjective || ''}
     Summary: ${userProfile.summary || ''}
     Work Experience: ${userProfile.experience}
     Skills: ${userProfile.skills}
@@ -243,6 +196,7 @@ exports.buildResume = async (userProfile) => {
     Format the resume with clear sections using markdown:
     # Name
     Contact info
+    ## Career Objective
     ## Professional Summary
     ## Work Experience
     ## Skills
@@ -253,16 +207,10 @@ exports.buildResume = async (userProfile) => {
     Use strong action verbs, quantify achievements, and make it impactful and professional.
   `;
   try {
-    const completion = await openai.chat.completions.create({
-      model: "meta/llama-3.1-8b-instruct",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.2,
-      top_p: 0.7,
-      max_tokens: 2048,
-    });
-    return completion.choices[0].message.content;
+    const result = await model.generateContent(prompt);
+    return result.response.text();
   } catch (error) {
-    console.error("NVIDIA Resume Builder Error:", error.message);
+    console.error("Gemini Resume Builder Error:", error.message);
     throw new Error("Failed to build resume");
   }
 };
@@ -277,36 +225,29 @@ exports.calculateATSScore = async (resumeText, jobDescription) => {
     Job Description:
     "${jobDescription}"
     
-    Return ONLY a JSON object with this exact structure:
+    Return ONLY a JSON object with this exact structure (no markdown wrappers like \`\`\`json):
     {
-      "ats_score": 0-100,
+      "ats_score": 85,
       "verdict": "Excellent Match|Good Match|Moderate Match|Poor Match",
-      "matched_keywords": ["keyword1", "keyword2", "keyword3"],
-      "missing_keywords": ["keyword1", "keyword2", "keyword3"],
+      "matched_keywords": ["keyword1", "keyword2"],
+      "missing_keywords": ["keyword3", "keyword4"],
       "section_scores": {
-        "skills_match": 0-100,
-        "experience_relevance": 0-100,
-        "education_match": 0-100,
-        "keyword_density": 0-100
+        "skills_match": 90,
+        "experience_relevance": 80,
+        "education_match": 100,
+        "keyword_density": 70
       },
-      "recommendations": ["tip 1", "tip 2", "tip 3"],
+      "recommendations": ["tip 1", "tip 2"],
       "summary": "2 sentence summary"
     }
   `;
   try {
-    const completion = await openai.chat.completions.create({
-      model: "meta/llama-3.1-8b-instruct",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.1,
-      top_p: 0.7,
-      max_tokens: 1000,
-    });
-    const content = completion.choices[0].message.content;
-    const jsonMatch = content.match(/\{[\s\S]*\}/);
-    if (jsonMatch) return JSON.parse(jsonMatch[0]);
+    const result = await model.generateContent(prompt);
+    let content = result.response.text();
+    content = content.replace(/```json/g, '').replace(/```/g, '').trim();
     return JSON.parse(content);
   } catch (error) {
-    console.error("NVIDIA ATS Score Error:", error.message);
+    console.error("Gemini ATS Score Error:", error.message);
     throw new Error("Failed to calculate ATS score");
   }
 };

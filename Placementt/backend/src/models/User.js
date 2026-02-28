@@ -19,6 +19,18 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'admin'],
         default: 'user'
     },
+    collegeName: {
+        type: String,
+        default: ''
+    },
+    rollNumber: {
+        type: String,
+        default: ''
+    },
+    passedOutYear: {
+        type: String,
+        default: ''
+    },
     createdAt: {
         type: Date,
         default: Date.now

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { GraduationCap, Timer, ChevronRight, CheckCircle2, Brain, Code, Sparkles, AlertCircle, RefreshCcw } from 'lucide-react';
+import API_BASE_URL from '../config/api';
 
 export default function AssessmentPage() {
     const [step, setStep] = useState('selection'); // selection, quiz, result
@@ -25,13 +26,13 @@ export default function AssessmentPage() {
         try {
             let res;
             if (isAI) {
-                res = await fetch('http://localhost:5001/api/ai/quiz/generate', {
+                res = await fetch(`${API_BASE_URL}/ai/quiz/generate`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ category }),
                 });
             } else {
-                res = await fetch(`http://localhost:5001/api/assessments/${category}`);
+                res = await fetch(`${API_BASE_URL}/assessments/${category}`);
             }
             
             const data = await res.json();

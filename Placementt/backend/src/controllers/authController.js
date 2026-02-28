@@ -4,7 +4,7 @@ const User = require('../models/User');
 
 exports.register = async (req, res) => {
     try {
-        const { name, email, password, role } = req.body;
+        const { name, email, password, role, collegeName, rollNumber, passedOutYear } = req.body;
 
         let user = await User.findOne({ email });
         if (user) {
@@ -16,13 +16,16 @@ exports.register = async (req, res) => {
             name,
             email,
             password: hashedPassword,
-            role: role || 'user'
+            role: role || 'user',
+            collegeName: collegeName || '',
+            rollNumber: rollNumber || '',
+            passedOutYear: passedOutYear || ''
         });
 
         await user.save();
 
-        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET || 'secret', { expiresIn: '1h' });
-        res.status(201).json({ token, user: { id: user._id, name, email, role: user.role } });
+        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET || 'secret', { expiresIn: '24h' });
+        res.status(201).json({ token, user: { id: user._id, name, email, role: user.role, collegeName: user.collegeName, rollNumber: user.rollNumber, passedOutYear: user.passedOutYear } });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error' });
@@ -38,10 +41,28 @@ exports.login = async (req, res) => {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
-        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET || 'secret', { expiresIn: '1h' });
-        res.json({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role } });
+        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET || 'secret', { expiresIn: '24h' });
+        res.json({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role, collegeName: user.collegeName, rollNumber: user.rollNumber, passedOutYear: user.passedOutYear } });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error' });
+    }
+};
+
+exports.getUsers = async (req, res) => {
+    try {
+        const users = await User.find().select('-password');
+        res.json(users);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+exports.deleteUser = async (req, res) => {
+    try {
+        await User.findByIdAndDelete(req.params.id);
+        res.json({ message: 'User deleted' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
 };

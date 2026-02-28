@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Zap, Send, RefreshCcw, Sparkles, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
+import API_BASE_URL from '../config/api';
 
 const sampleQuestions = [
   'Explain the concept of polymorphism in OOP.',
@@ -23,7 +24,7 @@ export default function RealtimeFeedbackPage() {
     setLoading(true);
     setFeedback(null);
     try {
-      const res = await fetch('http://localhost:5001/api/ai/feedback/evaluate', {
+      const res = await fetch(`${API_BASE_URL}/ai/feedback/evaluate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question, answer }),

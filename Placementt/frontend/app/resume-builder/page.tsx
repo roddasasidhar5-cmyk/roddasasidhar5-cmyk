@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { FileDown, RefreshCcw, Sparkles, User, Briefcase, GraduationCap, Code, FolderGit2, Award, ChevronRight, ChevronLeft, Copy, Printer } from 'lucide-react';
+import API_BASE_URL from '../config/api';
 
 const steps = [
   { label: 'Personal Info', icon: User },
@@ -16,7 +17,7 @@ export default function ResumeBuilderPage() {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     name: '', email: '', phone: '', linkedin: '',
-    targetRole: '', summary: '',
+    targetRole: '', careerObjective: '', summary: '',
     experience: '',
     skills: '', certifications: '', projects: '',
     education: '',
@@ -27,7 +28,7 @@ export default function ResumeBuilderPage() {
   const handleGenerate = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5001/api/ai/resume/build', {
+      const res = await fetch(`${API_BASE_URL}/ai/resume/build`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
@@ -87,58 +88,48 @@ export default function ResumeBuilderPage() {
 
           {/* Form Panel */}
           <div className="lg:col-span-2 glass p-10 rounded-[2.5rem] border border-white/10 space-y-6">
-            {step === 0 && (
-              <div className="space-y-5 animate-in slide-in-from-right-4 duration-300">
-                <h2 className="text-xl font-bold text-white">Personal Information</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div><label className={labelClass}>Full Name *</label><input className={inputClass} placeholder="e.g. Ravi Kumar" value={form.name} onChange={e => update('name', e.target.value)} /></div>
-                  <div><label className={labelClass}>Email</label><input className={inputClass} placeholder="email@domain.com" value={form.email} onChange={e => update('email', e.target.value)} /></div>
-                  <div><label className={labelClass}>Phone</label><input className={inputClass} placeholder="+91 98765 43210" value={form.phone} onChange={e => update('phone', e.target.value)} /></div>
-                  <div><label className={labelClass}>LinkedIn URL</label><input className={inputClass} placeholder="linkedin.com/in/username" value={form.linkedin} onChange={e => update('linkedin', e.target.value)} /></div>
-                  <div className="md:col-span-2"><label className={labelClass}>Target Job Role *</label><input className={inputClass} placeholder="e.g. Senior Backend Engineer" value={form.targetRole} onChange={e => update('targetRole', e.target.value)} /></div>
-                  <div className="md:col-span-2"><label className={labelClass}>Professional Summary (optional)</label><textarea className={`${inputClass} h-24 resize-none`} placeholder="A brief 2-3 line intro about yourself..." value={form.summary} onChange={e => update('summary', e.target.value)} /></div>
+            <div className="min-h-[400px]">
+              {step === 0 && (
+                <div className="space-y-5">
+                  <h2 className="text-xl font-bold text-white">Personal Information</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div><label className={labelClass}>Full Name *</label><input className={inputClass} placeholder="e.g. Ravi Kumar" value={form.name} onChange={e => update('name', e.target.value)} /></div>
+                    <div><label className={labelClass}>Email</label><input className={inputClass} placeholder="email@domain.com" value={form.email} onChange={e => update('email', e.target.value)} /></div>
+                    <div><label className={labelClass}>Phone</label><input className={inputClass} placeholder="+91 98765 43210" value={form.phone} onChange={e => update('phone', e.target.value)} /></div>
+                    <div><label className={labelClass}>LinkedIn URL</label><input className={inputClass} placeholder="linkedin.com/in/username" value={form.linkedin} onChange={e => update('linkedin', e.target.value)} /></div>
+                    <div className="md:col-span-2"><label className={labelClass}>Target Job Role *</label><input className={inputClass} placeholder="e.g. Senior Backend Engineer" value={form.targetRole} onChange={e => update('targetRole', e.target.value)} /></div>
+                    <div className="md:col-span-2"><label className={labelClass}>Career Objective (Essential for Freshers)</label><textarea className={`${inputClass} h-24 resize-none`} placeholder="A brief statement about your career goals..." value={form.careerObjective} onChange={e => update('careerObjective', e.target.value)} /></div>
+                    <div className="md:col-span-2"><label className={labelClass}>Professional Summary (optional)</label><textarea className={`${inputClass} h-24 resize-none`} placeholder="An alternative profile summary..." value={form.summary} onChange={e => update('summary', e.target.value)} /></div>
+                  </div>
                 </div>
-              </div>
-            )}
-
-            {step === 1 && (
-              <div className="space-y-5 animate-in slide-in-from-right-4 duration-300">
-                <h2 className="text-xl font-bold text-white">Work Experience</h2>
-                <div>
-                  <label className={labelClass}>Work Experience *</label>
-                  <textarea className={`${inputClass} h-64 resize-none`} placeholder={`Describe your work history. Example:\nSoftware Engineer at Google (2022–Present)\n- Led development of microservices with Python and Go\n- Reduced API latency by 40%\n\nJunior Developer at StartupXYZ (2020–2022)\n- Built React dashboards used by 10k+ users`} value={form.experience} onChange={e => update('experience', e.target.value)} />
-                  <p className="text-xs text-slate-600 mt-2">Include company name, role, dates, and bullet-point achievements.</p>
+              )}
+              {step === 1 && (
+                <div className="space-y-5">
+                  <h2 className="text-xl font-bold text-white">Work Experience</h2>
+                  <div>
+                    <label className={labelClass}>Work Experience *</label>
+                    <textarea className={`${inputClass} h-64 resize-none`} placeholder={`Describe your work history...`} value={form.experience} onChange={e => update('experience', e.target.value)} />
+                  </div>
+                  <div>
+                    <label className={labelClass}>Projects (Optional)</label>
+                    <textarea className={`${inputClass} h-28 resize-none`} value={form.projects} onChange={e => update('projects', e.target.value)} />
+                  </div>
                 </div>
-                <div>
-                  <label className={labelClass}>Projects (Optional)</label>
-                  <textarea className={`${inputClass} h-28 resize-none`} placeholder={"PlaceAI Portal — React, Node.js, MongoDB\nBuilt a full-stack placement portal with NVIDIA AI integration."} value={form.projects} onChange={e => update('projects', e.target.value)} />
+              )}
+              {step === 2 && (
+                <div className="space-y-5">
+                  <h2 className="text-xl font-bold text-white">Skills & Certifications</h2>
+                  <div><label className={labelClass}>Technical & Soft Skills *</label><textarea className={`${inputClass} h-28 resize-none`} value={form.skills} onChange={e => update('skills', e.target.value)} /></div>
+                  <div><label className={labelClass}>Certifications</label><textarea className={`${inputClass} h-24 resize-none`} value={form.certifications} onChange={e => update('certifications', e.target.value)} /></div>
                 </div>
-              </div>
-            )}
-
-            {step === 2 && (
-              <div className="space-y-5 animate-in slide-in-from-right-4 duration-300">
-                <h2 className="text-xl font-bold text-white">Skills & Certifications</h2>
-                <div>
-                  <label className={labelClass}>Technical & Soft Skills *</label>
-                  <textarea className={`${inputClass} h-28 resize-none`} placeholder="JavaScript, TypeScript, React, Node.js, Python, AWS, Docker, PostgreSQL, Problem Solving, Leadership..." value={form.skills} onChange={e => update('skills', e.target.value)} />
+              )}
+              {step === 3 && (
+                <div className="space-y-5">
+                  <h2 className="text-xl font-bold text-white">Education</h2>
+                  <div><label className={labelClass}>Education Details *</label><textarea className={`${inputClass} h-36 resize-none`} value={form.education} onChange={e => update('education', e.target.value)} /></div>
                 </div>
-                <div>
-                  <label className={labelClass}>Certifications (Optional)</label>
-                  <textarea className={`${inputClass} h-24 resize-none`} placeholder={"AWS Certified Developer (2023)\nGoogle Cloud Professional (2022)"} value={form.certifications} onChange={e => update('certifications', e.target.value)} />
-                </div>
-              </div>
-            )}
-
-            {step === 3 && (
-              <div className="space-y-5 animate-in slide-in-from-right-4 duration-300">
-                <h2 className="text-xl font-bold text-white">Education</h2>
-                <div>
-                  <label className={labelClass}>Education Details *</label>
-                  <textarea className={`${inputClass} h-36 resize-none`} placeholder={"B.Tech Computer Science — JNTUH (2018–2022), CGPA: 8.2\n12th Grade — ABC Junior College (2016–2018), 94%"} value={form.education} onChange={e => update('education', e.target.value)} />
-                </div>
-              </div>
-            )}
+              )}
+            </div>
 
             {/* Navigation */}
             <div className="flex gap-4 pt-4 border-t border-white/5">

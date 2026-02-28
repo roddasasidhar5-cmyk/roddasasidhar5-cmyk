@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { FileText, Send, CheckCircle, AlertCircle, RefreshCcw, Sparkles, Download, BarChart3 } from 'lucide-react';
+import API_BASE_URL from '../config/api';
 
 export default function ResumeAnalyzerPage() {
   const [resumeText, setResumeText] = useState('');
@@ -14,7 +15,7 @@ export default function ResumeAnalyzerPage() {
     setFeedback(null);
 
     try {
-      const res = await fetch('http://localhost:5001/api/ai/resume/analyze', {
+      const res = await fetch(`${API_BASE_URL}/ai/resume/analyze`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ resumeText }),

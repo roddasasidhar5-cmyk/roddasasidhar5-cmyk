@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, RefreshCcw, Sparkles } from 'lucide-react';
+import API_BASE_URL from '../config/api';
 
 export default function AssistantPage() {
   const [messages, setMessages] = useState<any[]>([]);
@@ -34,7 +35,7 @@ export default function AssistantPage() {
 
     try {
       // In a real app, you might pass the entire history
-      const res = await fetch('http://localhost:5001/api/ai/chat', {
+      const res = await fetch(`${API_BASE_URL}/ai/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userMessage, context: 'Act as a helpful career counselor.' }),

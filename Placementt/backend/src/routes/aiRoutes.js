@@ -30,12 +30,15 @@ router.post('/interview/next', async (req, res) => {
     const { role, currentQuestion, userAnswer, chatHistory } = req.body;
     const prompt = `
       You are an expert interviewer for a ${role} role. 
-      The last question asked was: "${currentQuestion}"
+      The last question you asked was: "${currentQuestion}"
       The candidate answered: "${userAnswer}"
       
-      Based on their answer and the interview history: ${JSON.stringify(chatHistory)}, ask the next most logical and challenging follow-up question. 
-      If their answer was weak, dig deeper. If it was strong, move to a new topic related to ${role}.
-      Keep your response to JUST the question.
+      Instructions:
+      1. First, explicitly evaluate the candidate's last answer. Tell them clearly if it was right or wrong, and provide a brief, professional correction or validation.
+      2. Then, based on their answer, move to a new, relevant topic for the ${role} position or ask a challenging follow-up question.
+      3. DO NOT repeat yourself. 
+      4. DO NOT provide "random" questions. The conversation must feel like a continuous, logical interview.
+      5. Return ONLY your spoken response (the evaluation of their answer + the next question).
     `;
     const response = await aiService.getAIResponse(prompt);
     res.json({ question: response });

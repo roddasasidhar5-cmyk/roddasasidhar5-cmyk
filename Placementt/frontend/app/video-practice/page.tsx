@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Video, Mic, MicOff, Send, RefreshCcw, Sparkles, BookOpen, MessageSquare, Star, ChevronDown } from 'lucide-react';
+import API_BASE_URL from '../config/api';
 
 const topics = [
   'Explain OOP Concepts',
@@ -28,7 +29,7 @@ export default function VideoPracticePage() {
     if (!activeTopic || !transcript.trim()) return;
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5001/api/ai/video-practice/feedback', {
+      const res = await fetch(`${API_BASE_URL}/ai/video-practice/feedback`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ topic: activeTopic, transcript }),
